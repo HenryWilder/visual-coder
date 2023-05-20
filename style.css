@@ -1,0 +1,130 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: monospace;
+}
+
+#page-wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#catelog {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    overflow-x: hidden;
+    overflow-y: visible;
+    background-color: #18141f;
+    padding: 10px;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+#editor {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: #242028;
+    overflow-x: hidden;
+    overflow-y: visible;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: default;
+}
+
+.snippet-button {
+    width: fit-content;
+    height: fit-content;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #2e2a33;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+[class^='syntax-'] { font-family: monospace; }
+.syntax-flow-control { color: #f92672; }
+.syntax-constant { color: #ae81ff; }
+.syntax-identifier { color: #a6e22e; }
+.syntax-keyword { color: #66d9ef; }
+.syntax-operator { color: #f92672; }
+.syntax-numeric { color: #ae81ff; }
+.syntax-string { color: #e6db74; }
+.syntax-comment { color: #75715e; }
+.syntax-type { color: #66d9ef; }
+.syntax-boolean { color: #ae81ff; }
+.syntax-function { color: #a6e22e; }
+.syntax-class { color: #66d9ef; }
+.syntax-regex { color: #e6db74; }
+.syntax-variable { color: #a6e22e; }
+.syntax-attribute { color: #a6e22e; }
+.syntax-meta { color: #75715e; }
+.syntax-tag { color: #f92672; }
+.syntax-punctuation { color: #f8f8f2; }
+.syntax-escape { color: #e6db74; }
+.syntax-unknown { color: #f8f8f2; }
+.syntax-namespace { color: #f92672; }
+.syntax-markup { color: #f8f8f2; }
+
+/* Inline sockets */
+nesting-socket[data-shape='expression'],
+nesting-socket[data-shape='type'] {
+    display: inline-block;
+    padding: 0.125ch 1ch;
+}
+nesting-socket[data-shape='expression'] {
+    background-color: darkblue;
+    border-radius: 9999px;
+}
+nesting-socket[data-shape='expression'].selected {
+    background-color: blue;
+}
+nesting-socket[data-shape='type'] {
+    background-color: darkcyan;
+    border-radius: 2px;
+}
+nesting-socket[data-shape='type'].selected {
+    background-color: cyan;
+}
+/* Block sockets */
+nesting-socket[data-shape='statement'],
+nesting-socket[data-shape='class-body'],
+nesting-socket[data-shape='function-body'] {
+    display: block;
+    border-radius: 10px;
+    padding: 5px;
+}
+nesting-socket[data-shape='statement'] {
+    background-color: darkred;
+}
+nesting-socket[data-shape='statement'].selected {
+    background-color: red;
+}
+nesting-socket[data-shape='class-body'] {
+    background-color: darkgreen;
+}
+nesting-socket[data-shape='class-body'].selected {
+    background-color: green;
+}
+nesting-socket[data-shape='function-body'] {
+    background-color: darkorange;
+}
+nesting-socket[data-shape='function-body'].selected {
+    background-color: orange;
+}
