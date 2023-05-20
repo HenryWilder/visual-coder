@@ -1,17 +1,6 @@
 const catelog = document.getElementById('catelog');
 const editor = document.getElementById('editor');
 
-let selectedElement = null;
-const selectElement = (element) => {
-    if (selectedElement) {
-        selectedElement.classList.remove('selected');
-    }
-    selectedElement = element;
-    if (selectedElement) { // Might be null
-        selectedElement.classList.add('selected');
-    }
-}
-
 const socketShapes = {
     /* Inline sockets */
     'expression': 'span',
@@ -46,14 +35,20 @@ const snippets = [
 ];
 
 class NestingSocket extends HTMLElement {
-    shape = 'socket';
+    static selected = null;
 
     constructor() {
         super();
-        this.shape = this.getAttribute('data-shape');
-        if (!this.shape)
-            this.shape = 'undefined';
-        this.addEventListener('click', () => { selectElement(this); });
+        this.addEventListener('click', (event) => {
+            if (event.target === this)
+                this.select();
+        });
+    }
+
+    initialize(shape) {
+        this.setAttribute('data-shape', shape);
+        this.shape = shape;
+        this.clear();
     }
 
     add(snippet) {
@@ -65,15 +60,34 @@ class NestingSocket extends HTMLElement {
     }
 
     clear() {
-        this.innerHTML = `<span class="placeholder">${this.shape}</span>`;
+        this.innerHTML = '';
+        const placeholder = document.createElement('span');
+        placeholder.classList.add('placeholder');
+        placeholder.innerText = this.shape;
+        this.appendChild(placeholder);
+    }
+
+    deselect() {
+        this.classList.remove('selected');
+        NestingSocket.selected = null;
+    }
+
+    select() {
+        NestingSocket.selected?.deselect();
+        NestingSocket.selected = this;
+        this.classList.add('selected');
     }
 }
-window.customElements.define('nesting-socket', NestingSocket);
+customElements.define('nesting-socket', NestingSocket);
+
+editor.addEventListener('click', (event) => {
+    if (event.target === editor)
+        NestingSocket.selected?.deselect();
+});
 
 const createSocket = (shape) => {
     const socket = document.createElement('nesting-socket');
-    socket.setAttribute('data-shape', shape);
-    socket.clear();
+    socket.initialize(shape);
     return socket;
 };
 

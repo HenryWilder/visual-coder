@@ -107,8 +107,11 @@ nesting-socket[data-shape='statement'],
 nesting-socket[data-shape='class-body'],
 nesting-socket[data-shape='function-body'] {
     display: block;
-    border-radius: 10px;
+    width: fit-content;
+    border-radius: 5px;
     padding: 5px;
+    padding-left: 4ch;
+    padding-right: 2ch;
 }
 nesting-socket[data-shape='statement'] {
     background-color: darkred;
@@ -127,4 +130,11 @@ nesting-socket[data-shape='function-body'] {
 }
 nesting-socket[data-shape='function-body'].selected {
     background-color: orange;
+}
+
+.placeholder {
+    color: rgba(255,255,255,0.5);
+    font-style: italic;
+    pointer-events: none;
+    user-select: none;
 }
