@@ -3,12 +3,47 @@ const editor = document.getElementById('editor');
 
 const socketShapes = {
     /* Inline sockets */
-    'expression': 'span',
-    'type': 'span',
+    'expression': {
+        tag:'span',
+        accepts: ['variable', 'literal', 'keyword']
+    },
+    'type': {
+        tag:'span',
+        accepts: []
+    },
+    'keyword': {
+        tag:'span',
+        accepts: []
+    },
+    'literal': {
+        tag:'span',
+        accepts: []
+    },
+    'variable': {
+        tag:'span',
+        accepts: []
+    },
     /* Block sockets */
-    'statement': 'div',
-    'class-body': 'div',
-    'function-body': 'div',
+    'statement': {
+        tag:'div',
+        accepts: ['variable', 'literal', 'keyword', 'function', 'class', 'object', 'array']
+    },
+    'object': {
+        tag:'div',
+        accepts: []
+    },
+    'array': {
+        tag:'div',
+        accepts: []
+    },
+    'class': {
+        tag:'div',
+        accepts: []
+    },
+    'function': {
+        tag:'div',
+        accepts: []
+    },
 };
 
 const snippets = [
@@ -32,6 +67,21 @@ const snippets = [
             { what: 'socket', shape: 'statement' },
         ]
     },
+    {
+        buttonText: [{ syntax:'keyword', text:'const' }],
+        shape: 'keyword',
+        element: [
+            { what: 'text', syntax: 'keyword', text: 'const' }
+        ]
+    },
+    {
+        buttonText: [{ syntax:'keyword', text:'class' }],
+        shape: 'class',
+        element: [
+            { what: 'text', syntax: 'keyword', text: 'class' },
+            { what: 'socket', shape: 'class' },
+        ]
+    },
 ];
 
 class NestingSocket extends HTMLElement {
@@ -51,11 +101,19 @@ class NestingSocket extends HTMLElement {
         this.clear();
     }
 
-    add(snippet) {
-        if (snippet.shape === this.shape) {
-            this.appendChild(snippet);
+    /**
+     * 
+     * @param {HTMLElement} snippetElement 
+     */
+    add(snippetElement) {
+        const snippetShape = Array.from(snippetElement.classList).find(x => x !== 'snippet');
+        if (snippetShape === this.shape) {
+            this.appendChild(snippetElement);
+            if (this.firstChild.classList.contains('placeholder')) {
+                this.children[0].remove();
+            }
         } else {
-            throw new Error(`Cannot add a ${snippet.shape} to a ${this.shape}`);
+            throw new Error(`Cannot add a ${snippetShape} to a ${this.shape}`);
         }
     }
 
@@ -91,27 +149,50 @@ const createSocket = (shape) => {
     return socket;
 };
 
+const createSnippetOptions = (snippet) => {
+    const snippetOptions = document.createElement('div');
+    snippetOptions.classList.add('snippet-options');
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('snippet-delete');
+    deleteButton.type = 'button';
+    deleteButton.innerText = 'x';
+    deleteButton.addEventListener('click', () => {
+        const parentSocket = snippetOptions.parentElement.parentElement;
+        if (parentSocket.children.length === 1)
+            parentSocket.clear();
+        else
+            snippetOptions.parentElement.remove();
+    });
+    snippetOptions.appendChild(deleteButton);
+    return snippetOptions;
+};
+
 const createSnippet = (snippet) => {
-    const snippetElement = document.createElement(socketShapes[snippet.shape]);
+    const tag = socketShapes[snippet.shape].tag;
+    const snippetElement = document.createElement(tag);
+    snippetElement.classList.add('snippet', snippet.shape);
+    const snippetContent = document.createElement(tag);
+    snippetElement.appendChild(snippetContent);
     for (const word of snippet.element) {
         switch (word.what) {
             case 'text': {
                 const wordElement = document.createElement('span');
                 wordElement.classList.add(`syntax-${word.syntax}`);
                 wordElement.innerText = word.text;
-                snippetElement.appendChild(wordElement);
+                snippetContent.appendChild(wordElement);
             } break;
-            
+
             case 'socket': {
-                snippetElement.appendChild(createSocket(word.shape));
+                snippetContent.appendChild(createSocket(word.shape));
             } break;
-            
+
             default:
                 throw new Error(`Unknown element type ${word.what}`);
         }
     }
+    snippetElement.appendChild(createSnippetOptions(snippet));
     return snippetElement;
-}
+};
 
 const createSnippetButton = (snippet) => {
     const snippetButton = document.createElement('button');
@@ -123,7 +204,12 @@ const createSnippetButton = (snippet) => {
         snippetButton.appendChild(wordElement);
     }
     snippetButton.addEventListener('click', () => {
-        editor.appendChild(createSnippet(snippet));
+        const snippetElement = createSnippet(snippet);
+        if (!!NestingSocket.selected) {
+            NestingSocket.selected.add(snippetElement);
+        } else {
+            editor.appendChild(snippetElement);
+        }
     });
     return snippetButton;
 }
