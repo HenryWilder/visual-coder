@@ -91,5 +91,45 @@
                 "shape": "class"
             }
         ]
+    },
+    {
+        "buttonText": [
+            {
+                "syntax": "flow-control",
+                "text": "switch"
+            }
+        ],
+        "shape": "statement",
+        "element": [
+            {
+                "what": "text",
+                "syntax": "flow-control",
+                "text": "switch"
+            },
+            {
+                "what": "socket",
+                "shape": "statement"
+            }
+        ]
+    },
+    {
+        "buttonText": [
+            {
+                "syntax": "flow-control",
+                "text": "switch"
+            }
+        ],
+        "shape": "statement",
+        "element": [
+            {
+                "what": "text",
+                "syntax": "flow-control",
+                "text": "switch"
+            },
+            {
+                "what": "socket",
+                "shape": "statement"
+            }
+        ]
     }
 ]
