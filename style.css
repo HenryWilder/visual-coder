@@ -103,7 +103,7 @@ body {
     max-width: 0;
     box-sizing: border-box;
     overflow: hidden;
-    transition: 400ms ease-in-out;
+    transition: 0ms ease-in-out;
     opacity: 0%;
 }
 .snippet:hover > .snippet-options {
@@ -147,6 +147,7 @@ nesting-socket {
     --main-color: var(--normal-color);
     background-color: var(--main-color);
     border-width: 2px;
+    transition: 200ms ease;
 }
 nesting-socket:not(:has(> .placeholder)) {
     background-color: transparent;
@@ -170,16 +171,36 @@ nesting-socket[data-shape='variable'] {
     padding: 0.125ch 1ch;
 }
 
-nesting-socket[data-shape='expression'] { --main-color: darkblue; border-radius: 9999px; }
-nesting-socket[data-shape='expression'].selected { --main-color: blue; }
-nesting-socket[data-shape='type'] { --main-color: var(--color-type); border-radius: 2px; }
-nesting-socket[data-shape='type'].selected { --main-color: var(--color-type-light); }
-nesting-socket[data-shape='keyword'] { --main-color: var(--color-keyword); border-radius: 5px; }
-nesting-socket[data-shape='keyword'].selected { --main-color: var(--color-keyword-light); }
-nesting-socket[data-shape='literal'] { --main-color: var(--color-literal); border-radius: 5px; }
-nesting-socket[data-shape='literal'].selected { --main-color: var(--color-literal-light); }
-nesting-socket[data-shape='variable'] { --main-color: var(--color-variable); border-radius: 5px; }
-nesting-socket[data-shape='variable'].selected { --main-color: var(--color-variable-light); }
+nesting-socket[data-shape='expression'] {
+    --normal-color: darkblue;
+    --selected-color: blue;
+    --hover-color: dodgerblue;
+    border-radius: 9999px;
+}
+nesting-socket[data-shape='type'] {
+    --normal-color: var(--color-type);
+    --hover-color: var(--color-type-light);
+    --selected-color: var(--color-type-light);
+    border-radius: 2px;
+}
+nesting-socket[data-shape='keyword'] {
+    --normal-color: var(--color-keyword);
+    --hover-color: var(--color-keyword-light);
+    --selected-color: var(--color-keyword-light);
+    border-radius: 5px;
+}
+nesting-socket[data-shape='literal'] {
+    --normal-color: var(--color-literal);
+    --hover-color: var(--color-literal-light);
+    --selected-color: var(--color-literal-light);
+    border-radius: 5px;
+}
+nesting-socket[data-shape='variable'] {
+    --normal-color: var(--color-variable);
+    --hover-color: var(--color-variable-light);
+    --selected-color: var(--color-variable-light);
+    border-radius: 5px;
+}
 
 /* Block sockets */
 nesting-socket[data-shape='statement'],
@@ -193,12 +214,21 @@ nesting-socket[data-shape='function'] {
     margin-left: 4ch;
 }
 
-nesting-socket[data-shape='statement'] { --main-color: darkred; }
-nesting-socket[data-shape='statement'].selected { --main-color: red; }
-nesting-socket[data-shape='class'] { --main-color: darkgreen; }
-nesting-socket[data-shape='class'].selected { --main-color: green; }
-nesting-socket[data-shape='function'] { --main-color: darkorange; }
-nesting-socket[data-shape='function'].selected { --main-color: orange; }
+nesting-socket[data-shape='statement'] {
+    --normal-color: darkred;
+    --hover-color: red;
+    --selected-color: red;
+}
+nesting-socket[data-shape='class'] {
+    --normal-color: darkgreen;
+    --hover-color: green;
+    --selected-color: green;
+}
+nesting-socket[data-shape='function'] {
+    --normal-color: darkorange;
+    --hover-color: orange;
+    --selected-color: orange;
+}
 
 .placeholder {
     color: rgba(255,255,255,0.5);

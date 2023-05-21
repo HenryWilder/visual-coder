@@ -46,44 +46,6 @@ const socketShapes = {
     },
 };
 
-const snippets = [
-    {
-        buttonText: [{ syntax:'flow-control', text:'if' }],
-        shape: 'statement',
-        element: [
-            { what: 'text', syntax: 'flow-control', text: 'if ' },
-            { what: 'socket', shape: 'expression' },
-            { what: 'socket', shape: 'statement' },
-        ]
-    },
-    {
-        buttonText: [{ syntax:'flow-control', text:'if else' }],
-        shape: 'statement',
-        element: [
-            { what: 'text', syntax: 'flow-control', text: 'if ' },
-            { what: 'socket', shape: 'expression' },
-            { what: 'socket', shape: 'statement' },
-            { what: 'text', syntax: 'flow-control', text: 'else' },
-            { what: 'socket', shape: 'statement' },
-        ]
-    },
-    {
-        buttonText: [{ syntax:'keyword', text:'const' }],
-        shape: 'keyword',
-        element: [
-            { what: 'text', syntax: 'keyword', text: 'const' }
-        ]
-    },
-    {
-        buttonText: [{ syntax:'keyword', text:'class' }],
-        shape: 'class',
-        element: [
-            { what: 'text', syntax: 'keyword', text: 'class' },
-            { what: 'socket', shape: 'class' },
-        ]
-    },
-];
-
 class NestingSocket extends HTMLElement {
     static selected = null;
 
@@ -158,10 +120,12 @@ const createSnippetOptions = (snippet) => {
     deleteButton.innerText = 'x';
     deleteButton.addEventListener('click', () => {
         const parentSocket = snippetOptions.parentElement.parentElement;
-        if (parentSocket.children.length === 1)
+        NestingSocket.selected?.deselect();
+        if (parentSocket !== editor && parentSocket.children.length === 1) {
             parentSocket.clear();
-        else
+        } else {
             snippetOptions.parentElement.remove();
+        }
     });
     snippetOptions.appendChild(deleteButton);
     return snippetOptions;
@@ -214,6 +178,14 @@ const createSnippetButton = (snippet) => {
     return snippetButton;
 }
 
-for (const snippet of snippets) {
-    catelog.appendChild(createSnippetButton(snippet));
+let snippets = [];
+async function loadSnippets() {
+    const response = await fetch('snippets.json');
+    snippets = await response.json();
+    console.log(snippets);
+    for (const snippet of snippets) {
+        catelog.appendChild(createSnippetButton(snippet));
+    }
+    
 }
+loadSnippets();
